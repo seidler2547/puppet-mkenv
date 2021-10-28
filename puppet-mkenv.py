@@ -19,9 +19,9 @@ import semver
 import functools
 import re
 from multiprocessing import Pool
-import requests_cache
+from requests_cache import CachedSession
 
-requests_cache.install_cache('mkenv_cache')
+session = CachedSession()
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 
@@ -81,7 +81,7 @@ def debug_match(a,b):
 def get_module_info(slug):
   print('Checking '+ slug)
   sys.stdout.flush()
-  resp = requests.get(forgeUrl + '/v3/modules/' + slug + '?exclude_fields=readme%20changelog%20license%20reference')
+  resp = session.get(forgeUrl + '/v3/modules/' + slug + '?exclude_fields=readme%20changelog%20license%20reference')
   modinfo = resp.json()
   name = modinfo['name']
   thismod = modules[name]
